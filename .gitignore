@@ -1,0 +1,31 @@
+# following pngs i dont want showing up
+basic.png
+bigmap.png
+
+chatgpt.png
+filter0.png
+filter1.png
+filter2.png
+filter3.png
+filter4.png
+filter5.png
+forest.png
+small_png.png
+testimage.png
+
+z0.png
+z3.png
+z6.png
+z9.png
+
+# python files
+
+prac.py
+
+png.py
+png1.py
+png2.py
+png3.py
+png4.py
+png5.py
+png6.py

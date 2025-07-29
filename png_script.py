@@ -18,7 +18,7 @@ def main():
         print('img: ', image.img)
         print()
         
-        image.load_file('bigmap.png')
+        image.load_file('brainbow.png')
         image.data[8:20]
         print(image.data[0:100].hex())
         print(type(image.data))

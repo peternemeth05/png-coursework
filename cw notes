@@ -1,0 +1,112 @@
+SUBMIT AND GET RID OF DECORATOR
+ - possibly get rid of iterating through chunks to save time
+
+PNG File Structure
+
+First 8 bytes
+- PNG file signature: 89 50 4E 47 0D 0A 1A ...
+
+Chunks in the following order:
+4 bytes: length of chunk data
+4 bytes: chunk type
+x bytes: chunk data
+4 bytes: CRC
+For chunks with no chunk data (eg IEND length = 0 decimal)
+
+
+
+- IHDR: Chunk type 49 48 44 52 ...
+    - 4 bytes are width: 00 00 04 92 - 1170 pixels (17-20)
+    - 4 bytes are height: 00 00 02 E1 - 737 pixels (21 - 24)
+    - 1 byte is 'Bit Depth': 08 - 8 (25)
+    - 1 byte is 'Color Type': 02 - 2 (26)
+    - 1 byte is 'compression method': 00 - 0 (27)
+    - 1 byte is 'filter method': 00 - 0 (28)
+    - 1 byte is 'interlace method': 00 - 0 (29)
+    For our assignement width and height can vary but the other specificaitions will remain constant, ie only check the first 8 bytes of IHDR
+
+  attributes: width, height, bit_depth, color_type. compress, filter interlace
+    these should all be read after the 
+    - sign (8 bytes) 
+    - IHDR chunk length (4 bytes)
+    - IHDR chunk type (4 bytes)
+    ie between 17th - 29th byte
+
+
+
+
+
+Last 12 bytes
+- IEND: ... 00 00 00 00 49 45 4E 44 42 60 82
+
+if file is: 00 00 01 
+
+
+brainbow-
+testimage-
+small_png-
+basic
+
+filter0-
+filter1-
+filter2-
+filter3-
+filter4-
+
+z0-
+z3-
+z6-
+z9-
+
+
+
+
+big map:
+
+png. 9.47 9.15 9.01 9.14
+
+png3. 9.23 9.08 9.11 9.02
+
+png4. 8.8 8.92 8.7
+
+png5. 8.82 8.73 8.9
+
+
+
+
+
+
+
+save_rgb()
+
+1. Find the IHDR and IEND Chunks
+- These will be used when you make up the file again
+  - when you make the new PNG you need the 
+    8 byte signature 
+    IHDR chunk (length, type, data, crc)
+    IDAT (the length of your new data, type, the new data, crc) - this will be found in step 2
+    IEND (length, type, crc)
+
+  Iterate throguh the chunks (like in part read_chunks) to find the IHDR and IEND
+  Save that infromation
+
+2. Iterate through self.img to get all the RGB values
+    You need to add the new channel RGB information to either a str, list, or bytearray
+    Add only the relevant RGB values 
+    Dont forget to add the filer 00 to the start of everyscanline ---- IMPORTANT
+      (i.e. if rgb_option is 1 then you only want the Red part, can set G and B to 0)
+      (you can do this by str += "self.img[the correct pixel's R]0000" )
+
+3. Finally put all the informaiton back together
+
+  Open the file_name, and write
+  the png signature: b'\x89PNG\r\n\x1a\n'
+  the IHDR data you found before
+  the new IDAT data:
+      len(the new rgb data).to_bytes(4, 'big')
+      b'IDAT'
+      the new rgb data
+      zlib.crc32(b'IDAT' + rgb_compressed_idat_data).to_bytes(4, 'big')
+
+  The IEND information
+
